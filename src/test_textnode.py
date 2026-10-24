@@ -1,5 +1,5 @@
 import unittest
-from textnode import TextNode, TextType
+from textnode import TextNode, TextType, text_node_to_html_node
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
@@ -16,6 +16,19 @@ class TestTextNode(unittest.TestCase):
         nodeA = TextNode("A", TextType.LINK, None)
         nodeB = TextNode("A", TextType.LINK)
         self.assertNotEqual(nodeA, nodeB)
-        
+
+    def test_text(self):
+        node = TextNode("This is a text node", TextType.TEXT)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, None)
+        self.assertEqual(html_node.value, "This is a text node")
+
+    def test_anchor(self):
+        node = TextNode("This is an anchor node", TextType.LINK, "https://www.google.com")
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, "a")
+        self.assertEqual(html_node.value, "This is an anchor node")
+        self.assertEqual(html_node.props, {"href": "https://www.google.com"})
+
 if __name__ == "__main__":
     unittest.main()
